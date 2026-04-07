@@ -37,3 +37,6 @@ gfx/pokemon/*/frames.asm
 *.sn*
 *.sa*
 *.sg1
+
+# build system
+.ninja_log

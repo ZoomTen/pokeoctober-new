@@ -1,0 +1,22 @@
+rule CC
+ command = gcc -O3 -flto -std=c11 -Wall -Wextra -pedantic $cflags -o $out $in
+ description = CC $out
+
+build gbcpal: CC gbcpal.c | common.h
+
+build gfx: CC gfx.c | common.h
+
+build lzcomp: CC lz/global.c lz/main.c lz/merging.c lz/mpcomp.c lz/nullcomp.c lz/options.c lz/output.c lz/packing.c lz/repcomp.c lz/spcomp.c lz/uncomp.c lz/util.c | common.h lz/proto.h
+ cflags = -Wno-strict-overflow -Wno-sign-compare
+
+build make_patch: CC make_patch.c | common.h
+
+build png_dimensions: CC png_dimensions.c | common.h
+
+build pokemon_animation: CC pokemon_animation.c | common.h
+
+build pokemon_animation_graphics: CC pokemon_animation_graphics.c | common.h
+
+build scan_includes: CC scan_includes.c | common.h
+
+build stadium: CC stadium.c | common.h
