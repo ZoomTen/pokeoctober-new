@@ -100,6 +100,16 @@ ResetWRAM:
 	ret
 
 _ResetWRAM:
+	ld a, BANK(wPokemonIndexTable)
+	ldh [rSVBK], a
+	ld hl, wPokemonIndexTable
+	ld bc, wPokemonIndexTableEnd - wPokemonIndexTable
+	xor a
+	call ByteFill
+
+	ld a, 1
+	ldh [rSVBK], a
+
 	ld hl, wShadowOAM
 	ld bc, wOptions - wShadowOAM
 	xor a
@@ -607,16 +617,22 @@ Continue_DisplayPokedexNumCaught:
 	ret z
 	push hl
 	ld hl, wPokedexCaught
-if NUM_POKEMON % 8
-	ld b, NUM_POKEMON / 8 + 1
-else
-	ld b, NUM_POKEMON / 8
-endc
-	call CountSetBits
+	ld bc, wEndPokedexCaught - wPokedexCaught
+	call CountSetBits16
 	pop hl
-	ld de, wNumSetBits
-	lb bc, 1, 3
-	jp PrintNum
+	ld a, b
+	ld b, c
+	ld c, a
+	push bc
+	push hl
+	ld hl, sp + 2
+	ld d, h
+	ld e, l
+	lb bc, 2, 3
+	pop hl
+	call PrintNum
+	pop bc
+	ret
 
 Continue_DisplayGameTime:
 	ld de, wGameTimeHours
@@ -653,7 +669,8 @@ OakSpeech:
 	call RotateThreePalettesRight
 	call ClearTilemap
 
-	ld a, WOOPER
+	ld hl, WOOPER
+	call GetPokemonIDFromIndex
 	ld [wCurSpecies], a
 	ld [wCurPartySpecies], a
 	call GetBaseData
@@ -713,7 +730,8 @@ OakText1:
 OakText2:
 	text_far _OakText2
 	text_asm
-	ld a, WOOPER
+	ld hl, WOOPER
+	call GetPokemonIDFromIndex
 	call PlayMonCry
 	call WaitSFX
 	ld hl, OakText3

@@ -1588,7 +1588,7 @@ _LinkBattleSendReceiveAction:
 
 	vc_hook Wireless_end_exchange
 	vc_patch Wireless_net_delay_3
-if DEF(_CRYSTAL11_VC)
+if DEF(_CRYSTAL_VC)
 	ld b, 26
 else
 	ld b, 10
@@ -1602,7 +1602,7 @@ endc
 
 	vc_hook Wireless_start_send_zero_bytes
 	vc_patch Wireless_net_delay_4
-if DEF(_CRYSTAL11_VC)
+if DEF(_CRYSTAL_VC)
 	ld b, 26
 else
 	ld b, 10
@@ -6406,7 +6406,6 @@ Function102d48:
 	ld [wTempSpecies], a
 	cp EGG
 	jr z, .asm_102d6d
-	dec a
 	call SetSeenAndCaughtMon
 	ld a, [wcd4c]
 	dec a
@@ -6417,7 +6416,20 @@ Function102d48:
 
 .asm_102d6d
 	ld a, [wTempSpecies]
-	cp UNOWN
+	call GetPokemonIndexFromID
+	ld a, l
+	sub LOW(UNOWN)
+	if HIGH(UNOWN) == 0
+		or h
+	else
+		jr nz, .asm_102d98
+		if HIGH(UNOWN) == 1
+			dec h
+		else
+			ld a, h
+			cp HIGH(UNOWN)
+		endc
+	endc
 	jr nz, .asm_102d98
 	ld a, [wcd4c]
 	dec a
