@@ -40,3 +40,4 @@ gfx/pokemon/*/frames.asm
 
 # build system
 .ninja_log
+build/
