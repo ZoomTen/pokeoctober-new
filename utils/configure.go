@@ -81,6 +81,7 @@ var tools = []string{
   "cat",
   "tr",
   "gbcpal",
+  "stadium",
 }
 
 /*========== Rule matching ==========
@@ -533,9 +534,12 @@ func main() {
     },
     "LINK_AND_FIX": {name: "LINK_AND_FIX",
       command: fmt.Sprintf(
-        "%s $rgblink -l $layoutfile -n $symfile -m $mapfile -o $out $in && %s $rgbfix $out",
+        "%s $rgblink -l $layoutfile -n $symfile -m $mapfile -o $out $in && " + 
+        "%s $rgbfix $out && " +
+        "%s $out",
         foundTools["rgblink"],
-        foundTools["rgbfix"]),
+        foundTools["rgbfix"],
+        foundTools["stadium"]),
     },
     "PKMN_ANIMATION_BITMASK": {name: "PKMN_ANIMATION_BITMASK",
       command: fmt.Sprintf(
