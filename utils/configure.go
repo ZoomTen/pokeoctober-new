@@ -20,6 +20,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -718,6 +719,11 @@ func (n NinjaFile) CheckRules() []string {
   return list
 }
 
+/* Needed to deal with some Windows stuff.. */
+func safe(i string) string {
+  return strings.Replace(i, ":", "$:", -1)
+}
+
 /* Rule represents a Ninja `rule` block. */
 type Rule struct {
   name    string
@@ -725,7 +731,14 @@ type Rule struct {
 }
 
 func (r Rule) Print(f io.Writer) {
-  fmt.Fprintf(f, "rule %s\n command = %s\n", r.name, r.command)
+  cmd := r.command
+  if runtime.GOOS == "windows" {
+    cmd = fmt.Sprintf("cmd /c \"%s\"", cmd)
+  }
+  fmt.Fprintf(f, "rule %s\n command = %s\n",
+    r.name,
+    cmd,
+  )
 }
 
 /* Stmt represents a Ninja `build` statement. */
@@ -739,19 +752,19 @@ type Stmt struct {
 }
 
 func (s Stmt) Print(f io.Writer) {
-  fmt.Fprintf(f, "build %s ", s.output)
+  fmt.Fprintf(f, "build %s ", safe(s.output))
   if len(s.implicitOutputs) > 0 {
     fmt.Fprint(f, "| ")
-    for _, x := range s.implicitOutputs { fmt.Fprintf(f, "%s ", x) }
+    for _, x := range s.implicitOutputs { fmt.Fprintf(f, "%s ", safe(x)) }
   }
   fmt.Fprintf(f, ": %s ", s.rule)
-  for _, x := range s.inputs { fmt.Fprintf(f, "%s ", x) }
+  for _, x := range s.inputs { fmt.Fprintf(f, "%s ", safe(x)) }
   if len(s.implicitInputs) > 0 {
     fmt.Fprint(f, "| ")
-    for _, x := range s.implicitInputs { fmt.Fprintf(f, "%s ", x) }
+    for _, x := range s.implicitInputs { fmt.Fprintf(f, "%s ", safe(x)) }
   }
   fmt.Fprintln(f)
-  for k, v := range s.flags { fmt.Fprintf(f, " %s = %s\n", k, v) }
+  for k, v := range s.flags { fmt.Fprintf(f, " %s = %s\n", k, safe(v)) }
 }
 
 type NeededTools map[string]string
@@ -760,7 +773,11 @@ func FindTools(dir string) (NeededTools, error) {
   t := make(NeededTools)
   allFound := true
   for _, name := range tools {
-    p := filepath.Join(dir, name)
+    binName := name
+    if runtime.GOOS == "windows" {
+      binName += ".exe"
+    }
+    p := filepath.Join(dir, binName)
     if !fileExists(p) {
       var err error
       p, err = exec.LookPath(name)
