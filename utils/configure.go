@@ -623,6 +623,10 @@ func main() {
   perFileDeps, totalDeps, e := ScanSources(foundTools["scan_includes"], sd, asmFiles)
   if e != nil { eexit("could not scan includes: " + e.Error()) }
 
+  /* Scan the include files, as well. */
+  _, includeDeps, e := ScanSources(foundTools["scan_includes"], sd, []string{"includes.asm"})
+  if e != nil { eexit("could not scan deps of includes.asm: " + e.Error()) }
+
   /* Prepare the ninja file. */
   n := NinjaFile{Rules: rules}
 
@@ -631,6 +635,12 @@ func main() {
   for _, b := range targets {
     if b.rule == "" { continue }
     n.Statements = append(n.Statements, b)
+  }
+  
+  /* Resolve the direct include dependencies. */
+  includeDepsResolved := make([]string, len(includeDeps))
+  for i, j := range includeDeps {
+    includeDepsResolved[i] = resolvePathToSrcOrBuild(j, sd, bd)
   }
 
   /* Create rules for every object file. These are compiled directly from their
@@ -648,7 +658,7 @@ func main() {
       rule:           "ASM",
       output:         objName,
       inputs:         []string{filepath.Join(sd, a)},
-      implicitInputs: objDeps,
+      implicitInputs: append(includeDepsResolved, objDeps...),
       flags: map[string]string{
         "rgbasm": fmt.Sprintf(
           "-Q8 -P %s -E -I %s -I %s",
