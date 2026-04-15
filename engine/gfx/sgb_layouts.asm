@@ -564,7 +564,8 @@ endr
 	ld a, PREDEFPAL_PEWTER
 	ret
 
-INCLUDE "data/maps/sgb_roof_pal_inds.asm"
+MapGroupRoofSGBPalInds:
+; INCLUDE "data/maps/sgb_roof_pal_inds.asm"
 
 _LoadSGBLayout_ReturnFromJumptable:
 	push de

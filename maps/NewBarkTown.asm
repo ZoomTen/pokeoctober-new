@@ -16,8 +16,6 @@ NewBarkTown_MapEvents:
 
 	def_warp_events
 	warp_event 15,  7, PLAYERS_HOUSE_1F, 1
-	warp_event  3,  7, BATTLE_TOWER_OUTSIDE, 1
-	warp_event  9,  3, INDIGO_PLATEAU_POKECENTER_1F, 1
 
 	def_coord_events
 

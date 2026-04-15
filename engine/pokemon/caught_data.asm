@@ -174,6 +174,8 @@ SetBoxmonOrEggmonCaughtData:
 	ld a, [wCurPartyLevel]
 	or b
 	ld [hli], a
+; TODO: case of MAP_GROUP_POKECENTER_2F
+IF 0
 	ld a, [wMapGroup]
 	ld b, a
 	ld a, [wMapNumber]
@@ -183,11 +185,11 @@ SetBoxmonOrEggmonCaughtData:
 	ld a, b
 	cp GROUP_POKECENTER_2F
 	jr nz, .NotPokecenter2F
-
 	ld a, [wBackupMapGroup]
 	ld b, a
 	ld a, [wBackupMapNumber]
 	ld c, a
+ENDC
 
 .NotPokecenter2F:
 	call GetWorldMapLocation
