@@ -701,7 +701,7 @@ func main() {
       ewarn(fmt.Sprintf("can't create directory: %s", d))
       continue
     }
-    fmt.Fprintf(os.Stderr, "created %s\n", d)
+    // fmt.Fprintf(os.Stderr, "created %s\n", d)
   }
 
   /* Write the final Ninja build file. */
