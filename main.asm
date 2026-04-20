@@ -246,10 +246,6 @@ INCLUDE "data/pokemon/base_stats.asm"
 INCLUDE "data/pokemon/names.asm"
 
 
-SECTION "Crystal Phone Text", ROMX
-
-
-
 SECTION "bank20", ROMX
 
 INCLUDE "engine/overworld/player_movement.asm"
@@ -300,15 +296,7 @@ INCLUDE "data/pokemon/first_stages.asm"
 SECTION "Phone Scripts 1", ROMX
 
 INCLUDE "engine/phone/scripts/generic_caller.asm"
-INCLUDE "engine/phone/scripts/hangups.asm"
-INCLUDE "engine/phone/scripts/reminders.asm"
-INCLUDE "engine/phone/scripts/hangups_2.asm"
-INCLUDE "engine/phone/scripts/reminders_2.asm"
 INCLUDE "engine/phone/scripts/bike_shop.asm"
-
-
-SECTION "Phone Text", ROMX
-
 
 SECTION "bank2E", ROMX
 
