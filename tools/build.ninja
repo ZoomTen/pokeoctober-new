@@ -1,6 +1,8 @@
 rule CC
  command = gcc -O3 -flto -std=c11 -Wall -Wextra -pedantic $cflags -o $out $in
  description = CC $out
+rule GO
+ command = CGO_ENABLED=0 GOPATH=$$PWD/mkdata_new_src ~/apps/go1.10/bin/go build -ldflags="-s -w" -o $out $in
 
 build gbcpal: CC gbcpal.c | common.h
 
@@ -20,3 +22,7 @@ build pokemon_animation_graphics: CC pokemon_animation_graphics.c | common.h
 build scan_includes: CC scan_includes.c | common.h
 
 build stadium: CC stadium.c | common.h
+
+build mkdata: GO mkdata_new_src/cmd/mkdata/main.go
+
+build fetch_gsheet: GO mkdata_new_src/cmd/fetch_gsheet/main.go
