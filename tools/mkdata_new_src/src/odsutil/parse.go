@@ -5,11 +5,13 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"os"
 )
 
 type OdsSheet interface {
 	Name() string
 	ValueAt(row int, col int) string
+	NRows() int
 }
 
 type OdsFile interface {
@@ -50,7 +52,7 @@ func (s *sheetImpl) Name() string {
 }
 
 func (s *sheetImpl) ValueAt(row int, col int) string {
-	if row < 0 || row >= len(s.data.Rows) {
+	if row < 0 || row >= s.NRows() {
 		return ""
 	}
 	r := s.data.Rows[row]
@@ -74,6 +76,10 @@ func (s *sheetImpl) ValueAt(row int, col int) string {
 		}
 	}
 	return ""
+}
+
+func (s *sheetImpl) NRows() int {
+	return len(s.data.Rows)
 }
 
 type fileImpl struct {
@@ -136,4 +142,18 @@ func ParseOds(r io.ReaderAt, size int64) (OdsFile, error) {
 	}
 
 	return file, nil
+}
+
+func ParseOdsFromFileName(s string) (OdsFile, error) {
+	o, e := os.Open(s)
+	if e != nil {
+		return nil, fmt.Errorf("can't open file '%s': %s", s, e.Error())
+	}
+	defer o.Close()
+	info, e := o.Stat()
+	if e != nil {
+		return nil, fmt.Errorf("can't stat file '%s': %s", s, e.Error())
+	}
+	size := info.Size()
+	return ParseOds(o, size)
 }
