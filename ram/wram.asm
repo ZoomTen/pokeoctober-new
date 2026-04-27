@@ -2337,6 +2337,7 @@ wUnusedNamesPointer:: dw
 
 wItemAttributesPointer:: dw
 
+wCurTMHM:: db
 wCurItem:: db
 wCurItemQuantity::
 wMartItemID::
@@ -2736,8 +2737,7 @@ wNumFleeAttempts:: db
 wMonTriedToEvolve:: db
 
 wTimeOfDay:: db
-
-	ds 1
+wTMHMsCount:: db
 
 
 SECTION "Enemy Party", WRAMX
@@ -3003,7 +3003,8 @@ wBadges::
 wJohtoBadges:: flag_array NUM_JOHTO_BADGES
 wKantoBadges:: flag_array NUM_KANTO_BADGES
 
-wTMsHMs:: ds NUM_TMS + NUM_HMS
+wTMsHMs:: flag_array NUM_TMS + NUM_HMS
+wTMsHMsEnd::
 
 wNumItems:: db
 wItems:: ds MAX_ITEMS * 2 + 1

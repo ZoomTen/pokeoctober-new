@@ -1077,4 +1077,34 @@ MACRO checkmaplockedmons
 	db checkmaplockedmons_command
 ENDM
 
+	const givetmhm_command
+MACRO givetmhm
+	db givetmhm_command
+	db \1 ; tmhm
+ENDM
+
+	const checktmhm_command
+MACRO checktmhm
+	db checktmhm_command
+	db \1 ; tmhm
+ENDM
+
+	const verbosegivetmhm_command
+MACRO verbosegivetmhm
+	db verbosegivetmhm_command
+	db \1 ; tmhm
+ENDM
+
+	const tmhmnotify_command
+MACRO tmhmnotify
+	db tmhmnotify_command
+ENDM
+
+	const tmhmtotext_command
+MACRO tmhmtotext
+	db tmhmtotext_command
+	db \1 ; tmhm
+	db \2 ; memory
+ENDM
+
 DEF NUM_EVENT_COMMANDS EQU const_value

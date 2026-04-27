@@ -173,6 +173,12 @@ _ResetWRAM:
 	ld hl, wNumPCItems
 	call .InitList
 
+	ld hl, wTMsHMs
+	xor a
+rept ((NUM_TMS+NUM_HMS)+7)/8
+	ld [hli], a
+endr
+
 	xor a
 	ld [wRoamMon1Species], a
 	ld [wRoamMon2Species], a

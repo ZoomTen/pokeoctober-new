@@ -160,17 +160,10 @@ GetItemName::
 	push bc
 	ld a, [wNamedObjectIndex]
 
-	cp TM01
-	jr nc, .TM
-
 	ld [wCurSpecies], a
 	ld a, ITEM_NAME
 	ld [wNamedObjectType], a
 	call GetName
-	jr .Copied
-.TM:
-	call GetTMHMName
-.Copied:
 	ld de, wStringBuffer1
 	pop bc
 	pop hl
@@ -203,11 +196,8 @@ GetTMHMName::
 	call CopyBytes
 
 ; TM/HM number
-	push de
 	ld a, [wNamedObjectIndex]
 	ld c, a
-	callfar GetTMHMNumber
-	pop de
 
 ; HM numbers start from 51, not 1
 	pop af
