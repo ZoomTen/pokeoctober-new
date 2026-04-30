@@ -16,9 +16,9 @@ MACRO add_tm
 ENDM
 
 ; see data/moves/tmhm_moves.asm for moves
-	const_def
+	const_def 1
 DEF TM01 EQU const_value
-	add_tm DYNAMICPUNCH ; 00
+	add_tm DYNAMICPUNCH ; 01
 	add_tm HEADBUTT     ; 
 	add_tm CURSE        ; c4
 	add_tm ROLLOUT      ; c5
