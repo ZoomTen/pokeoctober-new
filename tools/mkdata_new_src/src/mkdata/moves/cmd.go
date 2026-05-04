@@ -3,6 +3,8 @@ package moves
 import (
 	"flag"
 	"fmt"
+	"mkdata/utils"
+	"odsutil"
 	"os"
 )
 
@@ -29,7 +31,26 @@ func ProcessArgs(fs *flag.FlagSet, args []string) {
 		fs.Usage()
 		os.Exit(1)
 	}
-	fmt.Println(in)
-	fmt.Println(out)
+	o, e := odsutil.ParseOdsFromFileName(*in)
+	if e != nil {
+		fmt.Fprintf(os.Stderr, "cannot open file '%s': %s\n", *in, e.Error())
+		os.Exit(1)
+	}
+	s := o.GetSheetByName("Moves")
+	if s == nil {
+		fmt.Fprintf(os.Stderr, "can't open sheet 'Moves'\n")
+		os.Exit(1)
+	}
+	ss, e := GetMoves(s)
+	if e != nil {
+		fmt.Fprintf(os.Stderr, "can't parse sheet 'Moves': %s\n", e.Error())
+		os.Exit(1)
+	}
+	ss.Write()
+	e = utils.Wrfiles(*out, ss.Files)
+	if e != nil {
+		fmt.Fprintf(os.Stderr, "couldn't write item data: %s\n", e.Error())
+		os.Exit(1)
+	}
 	fmt.Println("conversion OK")
 }
